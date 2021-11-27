@@ -1,13 +1,18 @@
+import os
+from dotenv import load_dotenv
 import time
 import cv2
 import numpy as np
 from datetime import datetime, timedelta
 import smtplib, ssl
 
+load_dotenv()
+
 PORT = 465
-PASSWD = "Nugget89X"
-SENDER_EMAIL = "kdmotiondect@gmail.com"
-RECIEVE_EMAIL = "uscalfsec@gmail.com"
+PASSWD = os.environ['EMAILSECRET']
+print(PASSWD)
+SENDER_EMAIL = os.environ['SENDEREMAIL']
+RECIEVE_EMAIL = os.environ['EMAIL']
 
 first_email = True
 
@@ -57,7 +62,7 @@ static_back = None # ALMACENA LA IMAGEN DE REFERENCIA EN GRAYSCALE CON EL OBJETI
 listaMov = [None, None]
 
 toM = []
-v_feed = cv2.VideoCapture(1)#Creando el Feed de Video desde la cámara indexada 2
+v_feed = cv2.VideoCapture(0)#Creando el Feed de Video desde la cámara indexada 2
 
 n_frameTime = 0 #Contador de frames
 prevFtime = 0 #Contador de frames (ÚLTIMO FRAME)
@@ -117,9 +122,9 @@ while True:
             toM.append(datetime.now())            
         break
 
-    with open('movimientos.txt', 'w') as f:
-        for item in toM:
-            f.write("%s\n" % item)
+with open('movimientos.txt', 'w') as f:
+    for item in toM:
+        f.write("%s\n" % item)
 
-    v_feed.release()
-    cv2.destroyAllWindows()
+v_feed.release()
+cv2.destroyAllWindows()

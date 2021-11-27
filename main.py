@@ -70,11 +70,11 @@ prevFtime = 0 #Contador de frames (ÚLTIMO FRAME)
 while True:
     check, frame = v_feed.read()
     motion = False
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) #Convirtiendo el frame a gris 
     gray = cv2.GaussianBlur(gray, (23, 23), 0)#Aplicando un filtro Gaussiano para eliminar el ruido de la imagen y mejorar la detección de movimiento con kernel de tamaño 21x21
 
     if static_back is None:
-        static_back = gray
+        static_back = gray #Almacenando la imagen de referencia
         continue
 
     FrameDiferencia = cv2.absdiff(static_back, gray)#calculamos la dif emtre nuestro background y el frame en grayscale

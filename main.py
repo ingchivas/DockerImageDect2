@@ -58,8 +58,9 @@ n_frameTime = 0 #Contador de frames
 prevFtime = 0 #Contador de frames (ÚLTIMO FRAME)
 
 while True:
-    #skip the first 150 frames of the v_feed
-    if n_frameTime < 150:
+    #Skip the first 10 seconds of the video feed
+    if n_frameTime < 100:
+        _, frame = v_feed.read()
         n_frameTime += 1
         prevFtime = n_frameTime
         continue

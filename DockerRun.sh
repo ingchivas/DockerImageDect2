@@ -1,0 +1,1 @@
+docker run --device=/dev/video0:/dev/video0

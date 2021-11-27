@@ -39,7 +39,7 @@ doom_notes = [e[1], e[1], b[2], e[1], e[1], a[2], e[1], e[1], g[2], e[1], e[1], 
               e[1], e[1], b[2], e[1], e[1], a[2], e[1], e[1], g[2], e[1], e[1], gb[2]]
 doom_beats = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4]
 
-mentada = [a[3], e[3], e[3], f[3], e[3], ab[3], a[3]]
+mentada_notes = [a[3], e[3], e[3], f[3], e[3], ab[3], a[3]]
 mentada_beats = [2,1,1,2,4,2,4]
 
 def reproducir(notas, beats, tempo):
@@ -56,9 +56,9 @@ def alarmaDoom():
     reproducir(doom_notes, doom_beats, 0.15)
 
 def mentada():
-    reproducir(mentada, mentada_beats, 0.2)
+    reproducir(mentada_notes, mentada_beats, 0.2)
     
     
-mentada()
+#mentada()
 #alarmaStarWars()
 #alarmaDoom()

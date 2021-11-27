@@ -7,7 +7,9 @@ from datetime import datetime, timedelta
 import smtplib, ssl
 import buzzer
 
-load_dotenv()
+load_dotenv() 
+
+buzzer.alarmaDoom()
 
 PORT = 465
 PASSWD = os.environ['EMAILSECRET']
@@ -42,11 +44,11 @@ def send_email():
     if first_email == True:
         send_message()
         first_email = False
-        alarmaDoom()
+        buzzer.mentada()
     elif (last_email + timedelta(seconds=15) < time_now and first_email == False):
         send_message()
-        alarmaDoom()
         last_email = datetime.now()
+        buzzer.mentada()
     else:
         pass
 

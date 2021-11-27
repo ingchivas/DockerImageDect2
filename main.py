@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from datetime import datetime, timedelta
 import smtplib, ssl
+import buzzer
 
 load_dotenv()
 
@@ -18,44 +19,36 @@ first_email = True
 
 last_email = datetime.now()
 
-def send_email():
-    time_now = datetime.now()
-    global last_email
-    global first_email
-    if first_email == True:
-        message ="""
+def send_message():
+    message ="""
         Asunto: Alerta de Movimiento
         
         Motion detected at """ + str(datetime.now()) + """
         
         Nya
         """
-        pasen_contexto = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=pasen_contexto) as server:
-            server.login(SENDER_EMAIL, PASSWD)
-            server.sendmail(SENDER_EMAIL,RECIEVE_EMAIL,message)
+        
+    pasen_contexto = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=pasen_contexto) as server:
+        server.login(SENDER_EMAIL, PASSWD)
+        server.sendmail(SENDER_EMAIL,RECIEVE_EMAIL,message)
             
-        print("Email sent")
-        last_email = datetime.now()
+    print("Email sent")
+
+def send_email():
+    time_now = datetime.now()
+    global last_email
+    global first_email
+    if first_email == True:
+        send_message()
         first_email = False
+        alarmaDoom()
     elif (last_email + timedelta(seconds=15) < time_now and first_email == False):
-        message ="""
-        Subject: Alerta de Movimiento
-        
-        Motion detected at """ + str(datetime.now()) + """
-        
-        Nya
-        """
-        pasen_contexto = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=pasen_contexto) as server:
-            server.login(SENDER_EMAIL, PASSWD)
-            server.sendmail(SENDER_EMAIL,RECIEVE_EMAIL,message)
-            
-        print("Email sent")
+        send_message()
+        alarmaDoom()
         last_email = datetime.now()
     else:
         pass
-    
 
 static_back = None # ALMACENA LA IMAGEN DE REFERENCIA EN GRAYSCALE CON EL OBJETIVO DE DETECTAR MOVIMIENTO
 
@@ -68,13 +61,20 @@ n_frameTime = 0 #Contador de frames
 prevFtime = 0 #Contador de frames (ÚLTIMO FRAME)
 
 while True:
+    #Skip the first 10 seconds of the video feed
+    if n_frameTime < 100:
+        _, frame = v_feed.read()
+        n_frameTime += 1
+        prevFtime = n_frameTime
+        continue
+    
     check, frame = v_feed.read()
     motion = False
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (23, 23), 0)#Aplicando un filtro Gaussiano para eliminar el ruido de la imagen y mejorar la detección de movimiento con kernel de tamaño 21x21
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) #Convirtiendo el frame a gris 
+    gray = cv2.GaussianBlur(gray, (23, 23), 0)#Aplicando un filtro Gaussiano para eliminar el ruido de la imagen y mejorar la detección de movimiento con kernel de tamaño 23x23
 
     if static_back is None:
-        static_back = gray
+        static_back = gray #Almacenando la imagen de referencia
         continue
 
     FrameDiferencia = cv2.absdiff(static_back, gray)#calculamos la dif emtre nuestro background y el frame en grayscale
@@ -96,6 +96,7 @@ while True:
         if cv2.contourArea(contorno) < 10000: #si nuestro contorno es mayor a 10000 entonces:
             continue
         motion = True
+        
         cv2.putText(frame, "Movimiento DETECTADO", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 2)
         (x, y, w, h) = cv2.boundingRect(contorno) #Calcular el rectangulo más pequeño que contiene el contorno
         cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 3)#Dibujamos el rectangulo en el frame

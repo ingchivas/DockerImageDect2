@@ -1,3 +1,5 @@
 *.env
 *.csv
 movimientos.txt
+./__pycache__
+*.pyc

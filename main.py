@@ -27,8 +27,8 @@ def send_message():
     msg = MIMEMultipart('alternative')
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIEVE_EMAIL
-    msg['Subject'] = "Alerta de movimiento"
-    body = "Se ha detectado movimiento en la camara."
+    msg['Subject'] = "Movement Alert"
+    body = "Movement Detected"
     bodyHTML = """
     <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
@@ -79,6 +79,22 @@ def send_message():
 			}
 		}
 	</style>
+ <script>
+ function getCurrentTime() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+    var time = hours + ":" + minutes + ":" + seconds;
+    return time;
+}
+</script>
 </head>
 <body style="background-color: #FFFFFF; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
 <table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF;" width="100%">
@@ -145,7 +161,7 @@ def send_message():
 <div style="font-family: sans-serif">
 <div style="font-size: 14px; mso-line-height-alt: 16.8px; color: #555555; line-height: 1.2; font-family: Arial, Helvetica Neue, Helvetica, sans-serif;">
 <p style="margin: 0; font-size: 14px;">We have detected movement.</p>
-<p style="margin: 0; font-size: 14px;">Timestamp: </p>
+<p style="margin: 0; font-size: 14px;">Timestamp:</p> """ + str(datetime.now()) + """</p>
 </div>
 </div>
 </td>

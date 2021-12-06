@@ -15,7 +15,6 @@ buzzer.alarmaDoom()
 
 PORT = 465
 PASSWD = os.environ['EMAILSECRET']
-print(PASSWD)
 SENDER_EMAIL = os.environ['SENDEREMAIL']
 RECIEVE_EMAIL = os.environ['EMAIL']
 
